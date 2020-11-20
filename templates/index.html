@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="static/main.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  </head>
+  <body>
+    <script>history.replaceState(null, '', '/');</script>
+    <div>{{ plots[0]|safe }}</div>
+    <div>{{ plots[2]|safe }}</div>
+    <div>{{ plots[1]|safe }}</div>
+  </body>
+</html>
