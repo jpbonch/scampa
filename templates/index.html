@@ -3,13 +3,66 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="static/main.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
-    <script>history.replaceState(null, '', '/');</script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("body").css("display", "none");
+        $("body").fadeIn(500);
+    });
+  </script>
+
+  <div class='plotcontainer'>
+    <form name='dateform0' action='/date0'>
+      <select name="dateselect0" id="dateselect0" onchange="dateselect()">
+        {% for date in date_list[0] %}
+        <option value="{{ date }}">{{ date }}</option>
+        {% endfor %}
+      </select>
+    </form>
     <div>{{ plots[0]|safe }}</div>
-    <div>{{ plots[2]|safe }}</div>
+  </div>
+
+<div class='plotcontainer'>
+    <form name='dateform1' action='/date1'>
+      <select name="dateselect1" id="dateselect1" onchange="dateselect()">
+        {% for date in date_list[1] %}
+        <option value="{{ date }}">{{ date }}</option>
+        {% endfor %}
+      </select>
+    </form>
     <div>{{ plots[1]|safe }}</div>
+  </div>
+
+<div class='plotcontainer'>
+    <form name='dateform2' action='/date2'>
+      <select name="dateselect2" id="dateselect2" onchange="dateselect()">
+        {% for date in date_list[2] %}
+        <option value="{{ date }}">{{ date }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    <div>{{ plots[2]|safe }}</div>
+  </div>
+
+
+    <script>
+    var url = window.location.pathname.split('/');
+    console.log(url);
+    var sel0 = document.getElementById("dateselect0");
+    var sel1 = document.getElementById("dateselect1");
+    var sel2 = document.getElementById("dateselect2");
+    sel0.value = url[2]
+    sel1.value = url[3]
+    sel2.value = url[4]
+    function dateselect(){
+        window.location = '/'+screen.width+'/'+sel0.value+'/'+sel1.value+'/'+sel2.value;
+    }
+    </script>
+    <!-- <script>history.replaceState(null, '', '/');</script> -->
+
   </body>
 </html>
