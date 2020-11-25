@@ -1,6 +1,11 @@
 
 div{
   display: inline;
+  float: right;
+}
+
+h1{
+  display: inline;
 }
 
 .plotcontainer{

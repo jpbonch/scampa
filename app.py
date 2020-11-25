@@ -11,31 +11,38 @@ app = Flask(__name__)
 def index():
     today = date.today() - timedelta(days=2)
     todaydate = today.strftime("%Y-%m-%d")
-    strngy = "<script>window.location = '/'+screen.width+'/"+todaydate+"/"+todaydate+"/"+todaydate+"';"+"</script>"
+    strngy = "<script>window.location = '/'+screen.width+'/"+todaydate+"';"+"</script>"
     print(strngy)
-    return "<script>window.location = '/'+screen.width+'/"+todaydate+"/"+todaydate+"/"+todaydate+"';"+"</script>"
+    return "<script>window.location = '/'+screen.width+'/"+todaydate+"';"+"</script>"
 
-@app.route("/<width>/<graph0date>/<graph1date>/<graph2date>", methods=['GET', 'POST'])
-def main(width, graph0date, graph1date, graph2date):
+@app.route("/<width>/<graphdate>", methods=['GET', 'POST'])
+def main(width, graphdate):
     today = date.today() - timedelta(days=2)
+    start = today - timedelta(days=50)
     todaydate = today.strftime("%Y-%m-%d")
+    date_list = []
+    for y in range(today.toordinal(), start.toordinal()-1, -1):
+        date_list.append(date.fromordinal(y))
 
-    abingdon = "https://archive.sensor.community/"+graph0date+"/"+graph0date+"_pms5003_sensor_48281.csv"
-    stblaise = "https://archive.sensor.community/"+graph1date+"/"+graph1date+"_pms5003_sensor_50299.csv"
-    otherone = "https://archive.sensor.community/"+graph2date+"/"+graph2date+"_pms5003_sensor_48673.csv"
-    urllib.request.urlretrieve(abingdon, "abingdon.csv")
-    urllib.request.urlretrieve(stblaise, "stblaise.csv")
-    urllib.request.urlretrieve(otherone, "otherone.csv")
-
+    ############### add new sensor, pms5003 ####################
     longname = ["Abingdon School", "St. Blaise", ""]
     shortname  = ['abingdon', 'stblaise', 'otherone']
     id = ['48281', '50299', '48673']
-    plots = []
     colors = ['#e74697', '#add8e6', '#debe5d']
-    start_dates = [date(2020, 11, 17), date(2020, 11, 17), date(2020, 11, 17)]
-    date_list = [[],[],[]]
+    ###################################
 
-    for i in range(3):
+    notfoundtext = ['' for i in range(len(id))]
+    for i in range(len(id)):
+        try:
+            url = "https://archive.sensor.community/"+graphdate+"/"+graphdate+"_pms5003_sensor_"+id[i]+".csv"
+            urllib.request.urlretrieve(url, shortname[i]+".csv")
+        except urllib.error.HTTPError:
+            notfoundtext[i] = 'NO DATA'
+            colors[i] = '#FFFFFF'
+
+    plots = [[] for i in range(len(id))]
+    latest = [[] for i in range(len(id))]
+    for i in range(len(id)):
         with open(shortname[i]+".csv", 'r+') as f:
             data = f.read()
             data = data.split('\n')
@@ -44,31 +51,30 @@ def main(width, graph0date, graph1date, graph2date):
         data.pop(0)
         data.pop(len(data)-1)
 
-        xs = []
-        ys = []
-        for row in data:
-            xs.append(row[5])
-            ys.append(int(row[6]))
+        for num in (6,7):
+            xs = []
+            ys = []
+            for row in data:
+                xs.append(row[5])
+                ys.append(int(row[num]))
 
-        xs = [x[11:] for x in xs]
-        for x in xs:
-            splitted = x.split(':')
-            xs[xs.index(x)] = float(splitted[0]) + float(splitted[1])/60 + float(splitted[2])/3600
+            xs = [x[11:] for x in xs]
+            for x in xs:
+                splitted = x.split(':')
+                xs[xs.index(x)] = float(splitted[0]) + float(splitted[1])/60 + float(splitted[2])/3600
 
-        fig = Figure(figsize=(int(width)*(0.00484375/2), int(width)*0.5625*0.00625/2))
-        axis = fig.add_subplot(1, 1, 1)
-        axis.set_xlabel('Time')
-        axis.set_ylabel('P1')
-        axis.set_title('Sensor ' +id[i]+': '+ longname[i])
+            fig = Figure(figsize=(int(width)*(0.00484375/1.42), int(width)*0.5625*0.00625/1.3))
+            axis = fig.add_subplot(1, 1, 1)
+            axis.set_xlabel('Time')
+            axis.set_ylabel('P1' if num == 6 else 'P2')
+            axis.set_title('Sensor ' +id[i]+': '+ longname[i])
+            axis.text(((max(xs)-min(xs))/2)+min(xs), max(ys)//2, notfoundtext[i], size=18, ha='center', va='center', color='#A0A0A0')
 
 
-        axis.plot(xs, ys, c=colors[i])
-        plots.append(fig_to_html(fig))
+            axis.plot(xs, ys, c=colors[i])
+            plots[i].append(fig_to_html(fig))
 
-        for y in range(today.toordinal(), start_dates[i].toordinal()-1, -1):
-            date_list[i].append(date.fromordinal(y))
-
-    return render_template('index.html', plots=plots, date_list=date_list)
+    return render_template('index.html', plots=plots, latest=latest, date_list=date_list, id=id, longname=longname)
 
 
 if __name__ == "__main__":
