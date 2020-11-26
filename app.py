@@ -66,9 +66,11 @@ def main(width, graphdate):
             fig = Figure(figsize=(int(width)*(0.00484375/1.42), int(width)*0.5625*0.00625/1.3))
             axis = fig.add_subplot(1, 1, 1)
             axis.set_xlabel('Time')
-            axis.set_ylabel('P1' if num == 6 else 'P2')
-            axis.set_title('Sensor ' +id[i]+': '+ longname[i])
-            axis.text(((max(xs)-min(xs))/2)+min(xs), max(ys)//2, notfoundtext[i], size=18, ha='center', va='center', color='#A0A0A0')
+            axis.set_ylabel('µg/m³')
+            axis.text(((max(xs)-min(xs))/2)+min(xs), max(ys)/2, notfoundtext[i], size=18, ha='center', va='center', color='#A0A0A0')
+            toprighttext = 'PM10' if num == 6 else 'PM2.5'
+            if notfoundtext[i] == '':
+                axis.text(((max(xs)-min(xs))/1.1)+min(xs), max(ys)/1.05, toprighttext, size=30, ha='center', va='center', color='#A0A0A0' )
 
 
             axis.plot(xs, ys, c=colors[i])

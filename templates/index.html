@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -15,6 +17,8 @@
     });
   </script>
 
+  <div class='dateselectcontainer'>
+
   <form name='dateform' action='/date0'>
     <select name="dateselect0" id="dateselect" onchange="dateselecty()">
       {% for date in date_list %}
@@ -22,15 +26,22 @@
       {% endfor %}
     </select>
   </form>
+</div>
 
   {% for i in range(plots|length) %}
-  <div>
+  <div class='row'>
+    <div class="leftcolumn">
     <h1>Sensor {{ id[i] }}</h1>
     <h1>{{ longname[i] }}</h1>
-    {% for graph in plots[i] %}
-      {{ graph|safe }}
-    {% endfor %}
+    </div>
+    <div class="middlecolumn">
+      {{ plots[i][0]|safe }}
   </div>
+  <div>
+    {{ plots[i][1]|safe }}
+  </div>
+  </div>
+  <div class='splitline'></div>
   {% endfor %}
 
 
@@ -43,7 +54,7 @@
         window.location = '/'+screen.width+'/'+sel.value;
     }
     </script>
-    <!-- <script>history.replaceState(null, '', '/');</script> -->
+    <script>history.replaceState(null, '', '/');</script>
 
   </body>
 </html>
