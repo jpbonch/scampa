@@ -25,10 +25,10 @@ def main(width, graphdate):
         date_list.append(date.fromordinal(y))
 
     ############### add new sensor, pms5003 ####################
-    longname = ["Abingdon School", "St. Blaise", ""]
-    shortname  = ['abingdon', 'stblaise', 'otherone']
-    id = ['48281', '50299', '48673']
-    colors = ['#e74697', '#add8e6', '#debe5d']
+    longname = ["Abingdon School", "St. Blaise", "Radley College", "Abingdon Prep", ""]
+    shortname  = ['abingdon', 'stblaise', 'radley', 'abingdonprep','otherone'] #also filename
+    id = ['48281', '50299', '51969', '52053_indoor', '48673']
+    colors = ['#e74697', '#0091ff', '#800000', '#a4d2c7', '000000']
     ###################################
 
     notfoundtext = ['' for i in range(len(id))]
