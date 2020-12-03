@@ -33,6 +33,10 @@ form{
 .leftcolumn{
   width:25%;
   margin-top: 270px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 400px;
 }
 
 .middlecolumn{
