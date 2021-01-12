@@ -27,7 +27,7 @@ def main(width, graphdate):
     ############### add new sensor, pms5003 ####################
     longname = ["Abingdon School", "St. Blaise", "Radley College", "Abingdon Prep", ""]
     shortname  = ['abingdon', 'stblaise', 'radley', 'abingdonprep','otherone'] #also filename
-    id = ['48281', '50299', '51969', '52053_indoor', '48673']
+    id = ['48281', '50299', '51969', '52053', '486735']
     colors = ['#e74697', '#0091ff', '#800000', '#a4d2c7', '000000']
     ###################################
 
