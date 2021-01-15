@@ -50,13 +50,14 @@ def main(width, graphdate):
     plots = [[] for i in range(len(id))]
 
     for i in range(len(id)):
-        with open(shortname[i] + ".csv", 'r+') as f:
-            data = f.read()
-            data = data.split('\n')
-        for x in range(len(data)):
-            data[x] = data[x].split(';')
-        data.pop(0)
-        data.pop(len(data) - 1)
+        if do_plot[i]:
+            with open(shortname[i] + ".csv", 'r+') as f:
+                data = f.read()
+                data = data.split('\n')
+            for x in range(len(data)):
+                data[x] = data[x].split(';')
+            data.pop(0)
+            data.pop(len(data) - 1)
 
         # Both P1 and P2
         for num in (6, 7):
