@@ -15,10 +15,6 @@ body{
   max-width: 1900px;
 }
 
-.row{
-  display: flex;
-}
-
 .dateselectcontainer{
   text-align: center;
 }
@@ -32,11 +28,15 @@ form{
 
 .leftcolumn{
   width:25%;
-  margin-top: 270px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   height: 400px;
+}
+
+.lol{
+  display: inline-block;
+  vertical-align: bottom;
 }
 
 .middlecolumn{
