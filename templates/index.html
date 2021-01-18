@@ -34,12 +34,14 @@
     <h1>Sensor {{ id[i] }}</h1>
     <h1>{{ longname[i] }}</h1>
     </div>
+    <div class='lol'>
     <div class="lol">
       {{ plots[i][0]|safe }}
   </div>
   <div class="lol">
     {{ plots[i][1]|safe }}
   </div>
+</div>
   </div>
   <div class='splitline'></div>
   {% endfor %}
