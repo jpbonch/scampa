@@ -12,23 +12,29 @@ longname = ["Abingdon School", "St. Blaise",
 shortname = ['abingdon', 'stblaise', 'radley', 'abingdonprep',
              'thomasreade', 'otherone']  # also filename
 id = ['48281', '50299', '51969', '52053', '52049', '48673']
-colors = ['#e74697', '#0091ff', '#800000', '#a4d2c7', '#C0C0C0', '000000']
+colors = ['#e74697', '#0091ff', '#650000', '#a4d2c7', '#C0C0C0', '#000000']
 do_plot = [True, True, True, True, True, True]
 ###################################
 
 
-def get_graph_data(graphdate, SMOOTHNESS):
+def get_graph_data(graphdate, smoothness):
     for i in range(len(id)):
         try:
             url = "https://archive.sensor.community/" + graphdate + \
                 "/" + graphdate + "_pms5003_sensor_" + id[i] + ".csv"
             urllib.request.urlretrieve(url, shortname[i] + ".csv")
         except urllib.error.HTTPError:
+            print("Error downloading " + shortname[i])
             colors[i] = '#FFFFFF'
             do_plot[i] = False
 
     graphdata = {"p1": [], "p2": []}
-    x_new = np.linspace(0, 24, SMOOTHNESS)
+
+    if smoothness == "smooth":
+        x_new = np.linspace(0, 24, 24)
+    else:
+        x_new = np.linspace(0, 24, 300)
+
     for i in range(len(id)):
         if do_plot[i]:
             with open(shortname[i] + ".csv", 'r+') as f:
@@ -64,13 +70,23 @@ def get_graph_data(graphdate, SMOOTHNESS):
                     graphdata["p2"].append(y_new)
             # handle no data TODO
             #fix 2020-01-14
+            # 25th
+            # fix places not showing up
+            # hmtl file loops thrpugh deleted places
 
+    print(graphdata)
     return graphdata, x_new
 
 
 @app.route("/", methods=['GET', 'POST'])
-@app.route("/<graphdate>", methods=['GET', 'POST'])
-def main(graphdate=None):
+def index():
+    today = date.today() - timedelta(days=2)
+    return "<script>window.location = '/" + str(today) + "/smooth';</script>" + '\n' + (
+    """<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }};">""")
+
+
+@app.route("/<graphdate>/<smoothness>", methods=['GET', 'POST'])
+def main(graphdate=None, smoothness='smooth'):
     today = date.today() - timedelta(days=2)
     start = today - timedelta(days=100)
     date_list = []
@@ -79,7 +95,7 @@ def main(graphdate=None):
     if graphdate is None:
         graphdate = str(today)
 
-    graphdata, x_new = get_graph_data(graphdate, 300)
+    graphdata, x_new = get_graph_data(graphdate, smoothness)
 
     return render_template('index.html', graphdata=graphdata, date_list=date_list, longname=longname, x_new=x_new, colors=colors)
 
