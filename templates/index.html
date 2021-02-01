@@ -21,6 +21,9 @@
     });
   </script>
 
+  <!-- <div class= -->
+
+<div class='header'>
   <div class='dateselectcontainer'>
     <form>
       <select id="dateselect">
@@ -31,17 +34,24 @@
     </form>
   </div>
 
+<div class='smoothdiv'>
+<h2>SMOOTH PLOT</h2>
   <label class="switch">
   <input type="checkbox" id="smoothcheck">
   <span class="slider round"></span>
 </label>
+</div>
+</div>
 
 
-  <div>
+  <div class='chartcontainer'>
+    <h1>PARTICULATE MATTER 10</h1>
   <canvas id="chart" responsive="true"></canvas>
   </div>
 
-  <div>
+
+  <div class='chartcontainer'>
+    <h1>PARTICULATE MATTER 2.5</h1>
   <canvas id="chart2" responsive="true"></canvas>
   </div>
 
@@ -95,6 +105,13 @@
           ]
           },
           {% endfor %}
+          {% for i in range(deleted|length) %}
+          {
+            borderColor: "#FFFFFF",
+          label: "{{ deleted[i] }} (no data)",
+          hidden: true
+          },
+          {% endfor %}
       ]
       },
 
@@ -121,7 +138,90 @@
             ticks: {
                 suggestedMin: 0,
                 suggestedMax: 50
+            },
+            scaleLabel: {
+            display: true,
+            labelString: 'µg/m³'
+      }
+        }],
+        xAxes: [{
+          ticks: {
+                    callback: function(value, index, values) {
+                        var splitted = value.toString().split('.');
+                        var hour = splitted[0];
+                        var minute = parseFloat('0.' + splitted[1]) * 60;
+                        minute = Math.round(minute).toString();
+                        return splitted[0] + ":" + minute.padStart(2, "0");
+                    }
+                }
+        }]
+      },
+        }
+    });
+
+    var ctx = document.getElementById("chart2")
+    var chart2 = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+      lineTension: 0.8,
+      // The data for our dataset
+      data: {
+        labels: [
+          {% for item in x_new %}
+          {{ item }},
+          {% endfor %}
+        ],
+        datasets: [
+          {% for i in range(graphdata["p2"]|length) %}
+          {
+          label: "{{ longname[i] }}",
+          fill: false,
+          borderColor: "{{ colors[i] }}",
+          data: [
+            {% for item in graphdata["p2"][i] %}
+            {{ item }},
+            {% endfor %}
+          ]
+          },
+          {% endfor %}
+          {% for i in range(deleted|length) %}
+          {
+            borderColor: "#FFFFFF",
+          label: "{{ deleted[i] }} (no data)",
+          hidden: true
+          },
+          {% endfor %}
+      ]
+      },
+
+      // Configuration options go here
+      options: {
+        responsive: true,
+        tooltips: {
+          mode: 'index',
+          position: 'nearest',
+          intersect: false,
+          callbacks: {
+            title: function(tooltipItem, data){
+              return tooltipItem[0].label + ' on ' + sel.value;
+            },
+            label: function(tooltipItem, data) {
+                var place = data.datasets[tooltipItem.datasetIndex].label;
+                return place + ': ' + parseFloat(tooltipItem.value).toFixed(3).toString();
             }
+        }
+        },
+        scales: {
+        yAxes: [{
+            display: true,
+            ticks: {
+                suggestedMin: 0,
+                suggestedMax: 50
+            },
+            scaleLabel: {
+            display: true,
+            labelString: 'µg/m³'
+      }
         }],
         xAxes: [{
           ticks: {

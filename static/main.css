@@ -1,8 +1,5 @@
-*{
-  font-family: 'Roboto', sans-serif;
-}
 
-/* The switch - the box around the slider */
+/* Start smooth toggle */
 .switch {
   position: relative;
   display: inline-block;
@@ -10,14 +7,12 @@
   height: 34px;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -56,7 +51,6 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Rounded sliders */
 .slider.round {
   border-radius: 34px;
 }
@@ -64,12 +58,17 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+/* end smooth toggle */
+
+*{
+  font-family: 'Roboto', sans-serif;
+}
+
 
 #dateselect{
   width:200px;
   height: 50px;
   font-size: 30px;
-  margin-top: 70px;
 }
 
 body{
@@ -78,43 +77,39 @@ body{
   max-width: 1900px;
 }
 
-.dateselectcontainer{
-  text-align: center;
-}
-
-form{
+/* form{
   display: inline;
   margin: auto;
-  margin-left: 170px;
+} */
+
+.chartcontainer{
+  text-align: center;
+  width: 80%;
+  margin: auto;
 }
 
-
-.leftcolumn{
-  width:25%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 400px;
+.smoothdiv{
+  margin-right: 0px;
+  width: 280px;
+  height: 40px;
+  line-height: 40px;
+  float: right;
 }
 
-.lol{
-  display: inline-block;
-  vertical-align: bottom;
+.dateselectcontainer{
+  float:left;
+  margin-left: 20px;
 }
 
-.middlecolumn{
-  width:37.5%;
+canvas{
   margin: 0;
 }
 
-.rightcolumn{
-  width:37.5%;
-  margin: 0;
+h2{
+  display: inline;
+  font-size: 30px;
 }
 
-.splitline{
-  height: 2px;
-  width: 100%;
-  background-color: lightgray;
-  z-index: 100;
+input{
+  display: inline;
 }
