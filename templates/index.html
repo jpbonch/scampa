@@ -1,62 +1,126 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  </head>
-  <body>
-    <script type="text/javascript">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
+</head>
+
+<body>
+  <script type="text/javascript">
     $(document).ready(function() {
-        $("body").css("display", "none");
-        $("body").fadeIn(500);
+      $("body").css("display", "none");
+      $("body").fadeIn(500);
     });
   </script>
 
   <div class='dateselectcontainer'>
 
-  <form name='dateform' action='/date0'>
-    <select name="dateselect0" id="dateselect" onchange="dateselecty()">
-      {% for date in date_list %}
-      <option value="{{ date }}">{{ date }}</option>
+    <form>
+      <select id="dateselect">
+        {% for date in date_list %}
+        <option value="{{ date }}">{{ date }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <form>
+    <select id="smoothselect">
+      {% for i in range(25, 125, 25) %}
+      <option value="{{ i*3 }}">{{ i }}%</option>
       {% endfor %}
     </select>
   </form>
-</div>
 
-  {% for i in range(plots|length) %}
-  <div class='row'>
-    <div class="lol">
-    <h1>Sensor {{ id[i] }}</h1>
-    <h1>{{ longname[i] }}</h1>
-    </div>
-    <div class='lol'>
-    <div class="lol">
-      {{ plots[i][0]|safe }}
+  <div>
+  <canvas id="chart" responsive="true"></canvas>
   </div>
-  <div class="lol">
-    {{ plots[i][1]|safe }}
-  </div>
-</div>
-  </div>
-  <div class='splitline'></div>
-  {% endfor %}
 
+  <div>
+  <canvas id="chart2" responsive="true"></canvas>
+  </div>
 
-    <script>
+  <script>
+
     var url = window.location.pathname.split('/');
-    console.log(url)
     var sel = document.getElementById("dateselect");
-    sel.value = url[2];
-    function dateselecty(){
-        window.location = '/'+screen.width+'/'+sel.value;
+    console.log(url)
+    if (!(url[1] == '')){
+      sel.value = url[1];
     }
-    </script>
-    <script>history.replaceState(null, '', '/');</script>
+    var sel = document.getElementById("dateselect");
+    sel.onchange = function() {
+      window.location = '/' + sel.value;
+    }
 
-  </body>
+    var ctx = document.getElementById("chart")
+    var chart = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+      lineTension: 0.8,
+      // The data for our dataset
+      data: {
+        labels: [
+          {% for item in x_new %}
+          {{ item }},
+          {% endfor %}
+        ],
+        datasets: [
+          {% for i in range(longname|length) %}
+          {
+          label: "{{ longname[i] }}",
+          fill: false,
+          borderColor: "{{ colors[i] }}",
+          data: [
+            {% for item in graphdata["p1"][i] %}
+            {{ item }},
+            {% endfor %}
+          ]
+          },
+          {% endfor %}
+      ]
+      },
+
+      // Configuration options go here
+      options: {
+        responsive: true,
+        tooltips: {
+          mode: 'index',
+        },
+        scales: {
+        yAxes: [{
+            display: true,
+            ticks: {
+                suggestedMin: 0,
+                suggestedMax: 50
+            }
+        }],
+        xAxes: [{
+          ticks: {
+                    callback: function(value, index, values) {
+                        var splitted = value.toString().split('.');
+                        console.log(parseFloat(splitted[1]) * 60);
+                        return splitted[0] + ":" + Math.round((parseFloat(splitted[1]) * 60)/1000000000000000).toString();
+                    }
+                }
+        }]
+      },
+        }
+    });
+
+
+
+  </script>
+  <!-- <script>history.replaceState(null, '', '/');</script> -->
+
+</body>
+
 </html>
