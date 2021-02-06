@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 import urllib.request
 from datetime import date, timedelta
-from scipy.interpolate import make_interp_spline
 import numpy as np
 
 
@@ -28,17 +27,12 @@ def get_graph_data(graphdate, smoothness):
     for k in info.keys():
         info[k] = list(filter(lambda a: a != '', info[k]))
 
-    print(info)
-
-
-
-
     graphdata = {"p1": [], "p2": []}
 
     if smoothness == "smooth":
         x_new = list(range(0, 24))
     else:
-        x_new = np.linspace(0, 24, 582)
+        x_new = np.linspace(0, 24, 300)
 
     for i in range(len(info["id"])):
         with open(info["shortname"][i] + ".csv", 'r+') as f:
