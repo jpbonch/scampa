@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>SCAMPA</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
@@ -99,8 +99,8 @@
           fill: false,
           borderColor: "{{ colors[i] }}",
           data: [
-            {% for item in graphdata["p1"][i] %}
-            {{ item }},
+            {% for x in range(x_new|length) %}
+            {{ graphdata["p2"][i][x] }},
             {% endfor %}
           ]
           },
@@ -137,7 +137,7 @@
             display: true,
             ticks: {
                 suggestedMin: 0,
-                suggestedMax: 50
+                suggestedMax: 25
             },
             scaleLabel: {
             display: true,
@@ -178,8 +178,8 @@
           fill: false,
           borderColor: "{{ colors[i] }}",
           data: [
-            {% for item in graphdata["p2"][i] %}
-            {{ item }},
+            {% for x in range(x_new|length) %}
+            {{ graphdata["p2"][i][x] }},
             {% endfor %}
           ]
           },
@@ -216,7 +216,7 @@
             display: true,
             ticks: {
                 suggestedMin: 0,
-                suggestedMax: 50
+                suggestedMax: 25
             },
             scaleLabel: {
             display: true,
@@ -241,7 +241,7 @@
 
 
   </script>
-  <!-- <script>history.replaceState(null, '', '/');</script> -->
+  <script>history.replaceState(null, '', '/');</script>
 
 </body>
 
