@@ -31,8 +31,10 @@ def get_graph_data(graphdate, smoothness):
 
     if smoothness == "smooth":
         x_new = list(range(0, 24))
+        step = 24
     else:
         x_new = np.linspace(0, 24, 300)
+        step = 2
 
     for i in range(len(info["id"])):
         with open(info["shortname"][i] + ".csv", 'r+') as f:
@@ -46,8 +48,8 @@ def get_graph_data(graphdate, smoothness):
         # Both P1 and P2
         for num in (6, 7):
             ys = []
-            for row in data:
-                ys.append(int(row[num]))
+            for y in range(0, len(data), step):
+                ys.append(int(data[y][num]))
 
             if num == 6:
                 graphdata["p1"].append(ys)
