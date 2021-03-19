@@ -61,7 +61,7 @@ def get_graph_data(graphdate, smoothness):
 
 @ app.route("/", methods=['GET', 'POST'])
 def index():
-    today = date.today() - timedelta(days=2)
+    today = date.today() - timedelta(days=1)
     return "<script>window.location = '/" + str(today) + "/smooth';</script>" + '\n' + \
            """<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }};">"""
 
