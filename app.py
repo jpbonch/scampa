@@ -72,15 +72,15 @@ def main(graphdate=None, smoothness='smooth'):
     global info
     info = {
         "longname": ["Abingdon School", "St. Blaise", "Radley College",
-                     "Abingdon Prep", "Thomas Reade", "Sensor 48673"],
+                     "Abingdon Prep", "Thomas Reade", "Sensor 48673", "John Mason"],
         "shortname": ['abingdon', 'stblaise', 'radley', 'abingdonprep',
-                      'thomasreade', 'otherone'],
-        "id": ['48281', '50299', '51969', '52053', '52049', '48673'],
+                      'thomasreade', 'otherone', 'johnmason'],
+        "id": ['48281', '50299', '51969', '52053', '52049', '48673', '59506'],
         "colors": ['#e74697', '#0091ff', '#650000', '#a4d2c7', '#C0C0C0',
-                   '#000000']
+                   '#000000', '#fc6a03']
     }
 
-    today = date.today() - timedelta(days=2)
+    today = date.today() - timedelta(days=1)
     start = today - timedelta(days=100)
     date_list = []
     for y in range(today.toordinal(), start.toordinal() - 1, -1):
