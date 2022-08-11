@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SCAMPA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <link href="index.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+        <div>
+        <h1 class="mainTitle">SCAMPA</h1>
+        <p class="projectDesc">The Schools Clean Air Monitoring Project is an educational partnership between 13 primary and secondary schools in the Abingdon area in England. Children of all ages have participated, collecting and interpreting the results from the particulate matter air quality tests, by plotting the data over time.</p>
+        <button class="goToDataButton" id="goToDataButton">SEE THE DATA</button>
+    </div>
+
+        <img class='mapImage' src="scampa.jpg" />
+    </div>
+
+    <div id="loading">
+      <h3 class="loadingDataText">LOADING DATA...</h3>
+    </div>
+    <div class="layout">
+
+    <div class="dateSelectorDiv">
+    <p class="dateText">Click the calendar icon to select a date for data.</p>
+    <input type="date" id="dateselector" value="2020-11-20" min="2020-11-17" max="2022-05-02"/>
+    <p class="dateText">Dates range from 17/11/2020 to 02/05/2022</p>
+    </div>
+
+    <div class="chartcontainer" id="chartContainerOne">
+      <h1 class="title">PM10</h1>
+      <canvas id="chart" responsive="true"></canvas>
+    </div>
+
+    <p class="graphText">This data is separated into two graphs: PM10 and PM2.5 represent different sizes of particulate matter in the air. PM10 are particles with diameter less than 10 microns, and PM 2.5 are with diameter lass than 2.5 microns. <br><br> A greater microgram measurement per cube meter (µg/m³) means more particles in the air, and so dirtier air.<br><br>
+      Click the names of the data collection sites above the graphs to hide them, and hover your cursor over the lines to obtain measurements.</p>
+
+    <div class="chartcontainer" id="chartContainerTwo">
+        <h1 class="title">PM2.5</h1>
+        <canvas id="chart2" responsive="true"></canvas>
+      </div>
+
+    </div>
+    
+
+    <script>
+        async function loadGraphs(date){
+            let loadingScreen = document.getElementById('loading');
+            loadingScreen.style.display = "block";
+            var graph = await fetch(date);
+            var body = await graph.json()
+
+            var oldchart = document.getElementById("chart");
+            oldchart.parentNode.removeChild(oldchart);
+            var oldchart = document.getElementById("chart2");
+            oldchart.parentNode.removeChild(oldchart);
+
+            var ctx = document.createElement("canvas");
+            ctx.id = "chart";
+            ctx.responsive = "true";
+            document.getElementById("chartContainerOne").appendChild(ctx);
+            var chart = new Chart(ctx, body.p1);
+            
+            var ctx = document.createElement("canvas");
+            ctx.id = "chart2";
+            ctx.responsive = "true";
+            document.getElementById("chartContainerTwo").appendChild(ctx);
+            var chart = new Chart(ctx, body.p2);
+
+            loadingScreen.style.display = "none";
+        }
+
+        loadGraphs('/scampa/2020-11-20');
+        
+    </script>
+    <script>
+        let dateSelector = document.getElementById("dateselector");
+        dateSelector.addEventListener("change", (e) => {loadGraphs('/scampa/' + e.target.value)});
+
+        let goToDataButton = document.getElementById("goToDataButton");
+        goToDataButton.addEventListener("click", (e) => {document.getElementById("chart2").scrollIntoView()});
+    </script>
+  </body>
+</html>
